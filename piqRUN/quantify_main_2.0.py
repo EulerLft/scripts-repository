@@ -12,7 +12,7 @@ lst = search_txt(input('Please input folder path: '), input('Please input key wo
 
 for item in lst:
     token1 = item[:8]
-    token2 = item[-10:-4] 
+    token2 = item[27:-4] 
     spectrum_file = item
     plot_file = token1 + '_' + token2 + '_plot.csv'
     log_file = token1 + '_' + token2 + '_log.txt'
