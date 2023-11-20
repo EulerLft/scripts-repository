@@ -230,7 +230,7 @@ data = {
     'Ni peak':lst_peak_Ni,
     'Ni abs error':lst_error_Ni,
     'Zn ox%':lst_ox_Zn,
-    'Zn peak area%':lst_peak_Zn,
+    'Zn peak area':lst_peak_Zn,
     'Zn abs error':lst_error_Zn,
     'Br ox%':lst_ox_Br,
     'Br peak area':lst_peak_Br,
