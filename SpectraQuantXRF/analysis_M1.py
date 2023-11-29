@@ -137,7 +137,7 @@ data = {
 }
 
 df1 = pd.DataFrame(data)
-df1.to_csv('analysisM1_maxChannel.csv')
+#df1.to_csv('analysisM1_maxChannel.csv')
 
 
 # Define the column names you want to process
@@ -160,7 +160,7 @@ for col in columns_to_process:
 df_analysis = pd.DataFrame(background_lists)
 
 # Save the DataFrame to a CSV file
-df_analysis.to_csv('analysisM1_back.csv')
+#df_analysis.to_csv('analysisM1_back.csv')
 
 #Analysis Script
 # Peak Area
@@ -612,12 +612,12 @@ dict = {'PMC':lst_PMC,
        'P peak area M1':lstP_peakAreaCorr,      
        'S peak area M1':lstS_peakAreaCorr,     
        'Rh peak area M1':lstRh_peakAreaCorr,      
-       'K peak area Corr M1':lstK_peakAreaCorr,
-       'Ca(a) peak area M1':lstCaa_peakAreaCorr,
-       'Ti(a) peak area M1':lstTia_peakAreaCorr,       
+       'K peak area M1':lstK_peakAreaCorr,
+       'Ca peak area M1':lstCaa_peakAreaCorr,
+       'Ti peak area M1':lstTia_peakAreaCorr,       
        'Cr peak area M1':lstCr_peakAreaCorr,       
        'Mn peak area M1':lstMn_peakAreaCorr,      
-       'Fe(a) peak area M1':lstFea_peakAreaCorr,       
+       'Fe peak area M1':lstFea_peakAreaCorr,       
        'Ni peak area M1':lstNi_peakAreaCorr}
 
 df_final = pd.DataFrame(dict)
