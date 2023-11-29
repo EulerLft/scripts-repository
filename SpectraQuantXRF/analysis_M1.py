@@ -12,11 +12,15 @@ from numpy import trapz
 # Input file names (input & output files)
 input_file = input('please input the file name you want to analyze: ')
 output_file = input('please input a name for the output file: ')
+input_PMC_file = input('please input the PMC file name associated: ')
 
 # Load input file to DataFrame
 df = pd.read_csv(input_file)
-df = df.iloc[:,1:]
+df = df.iloc[:,2:]
 
+df_PMC = pd.read_csv(input_PMC_file)
+
+lst_PMC = df_PMC['PMC'].tolist()
 
 # peak ranges 
 peakRanges = [152,172,174,202,205,244,247,272,278,314,319,397,402,
@@ -230,7 +234,7 @@ for q in range(dfMg.shape[0]):
     tdf_Si = tdf_Si.reset_index(drop=True)
     y_Si = tdf_Si['Count']
     x_Si = list(range(0,len(tdf_Si.index)))
-    area_Si = trapz(y_Si,x_Si)   
+    area_Si = (trapz(y_Si,x_Si))*1.1   
     lstSi_peakArea.append(area_Si)
     
     tdf_P = pd.Series(dfP.iloc[q,:])
@@ -239,7 +243,7 @@ for q in range(dfMg.shape[0]):
     tdf_P = tdf_P.reset_index(drop=True)
     y_P = tdf_P['Count']
     x_P = list(range(0,len(tdf_P.index)))
-    area_P = trapz(y_P,x_P)   
+    area_P = (trapz(y_P,x_P))*1.1   
     lstP_peakArea.append(area_P)
 
     tdf_S = pd.Series(dfS.iloc[q,:])
@@ -248,7 +252,7 @@ for q in range(dfMg.shape[0]):
     tdf_S = tdf_S.reset_index(drop=True)
     y_S = tdf_S['Count']
     x_S = list(range(0,len(tdf_S.index)))
-    area_S = trapz(y_S,x_S)   
+    area_S = (trapz(y_S,x_S))*1.1   
     lstS_peakArea.append(area_S)
     
     tdf_Rh = pd.Series(dfRh.iloc[q,:])
@@ -257,7 +261,7 @@ for q in range(dfMg.shape[0]):
     tdf_Rh = tdf_Rh.reset_index(drop=True)
     y_Rh = tdf_Rh['Count']
     x_Rh = list(range(0,len(tdf_Rh.index)))
-    area_Rh = trapz(y_Rh,x_Rh)   
+    area_Rh = trapz(y_Rh,x_Rh)  
     lstRh_peakArea.append(area_Rh)
     
     tdf_K = pd.Series(dfK.iloc[q,:])
@@ -266,7 +270,7 @@ for q in range(dfMg.shape[0]):
     tdf_K = tdf_K.reset_index(drop=True)
     y_K = tdf_K['Count']
     x_K = list(range(0,len(tdf_K.index)))
-    area_K = trapz(y_K,x_K)   
+    area_K = (trapz(y_K,x_K))*1.1   
     lstK_peakArea.append(area_K)
  
     tdf_Caa = pd.Series(dfCaa.iloc[q,:])
@@ -275,7 +279,7 @@ for q in range(dfMg.shape[0]):
     tdf_Caa = tdf_Caa.reset_index(drop=True)
     y_Caa = tdf_Caa['Count']
     x_Caa = list(range(0,len(tdf_Caa.index)))
-    area_Caa = trapz(y_Caa,x_Caa)   
+    area_Caa = (trapz(y_Caa,x_Caa))*1.1   
     lstCaa_peakArea.append(area_Caa)    
     
     tdf_Tia = pd.Series(dfTia.iloc[q,:])
@@ -284,7 +288,7 @@ for q in range(dfMg.shape[0]):
     tdf_Tia = tdf_Tia.reset_index(drop=True)
     y_Tia = tdf_Tia['Count']
     x_Tia = list(range(0,len(tdf_Tia.index)))
-    area_Tia = trapz(y_Tia,x_Tia)   
+    area_Tia = (trapz(y_Tia,x_Tia))*1.1   
     lstTia_peakArea.append(area_Tia)
 
     tdf_Cr = pd.Series(dfCr.iloc[q,:])
@@ -293,7 +297,7 @@ for q in range(dfMg.shape[0]):
     tdf_Cr = tdf_Cr.reset_index(drop=True)
     y_Cr = tdf_Cr['Count']
     x_Cr = list(range(0,len(tdf_Cr.index)))
-    area_Cr = trapz(y_Cr,x_Cr)   
+    area_Cr = (trapz(y_Cr,x_Cr))*1.1   
     lstCr_peakArea.append(area_Cr)
 
     tdf_Mn = pd.Series(dfMn.iloc[q,:])
@@ -302,7 +306,7 @@ for q in range(dfMg.shape[0]):
     tdf_Mn = tdf_Mn.reset_index(drop=True)
     y_Mn = tdf_Mn['Count']
     x_Mn = list(range(0,len(tdf_Mn.index)))
-    area_Mn = trapz(y_Mn,x_Mn)   
+    area_Mn = trapz(y_Mn,x_Mn)  
     lstMn_peakArea.append(area_Mn)
     
     tdf_Fea = pd.Series(dfFea.iloc[q,:])
@@ -311,7 +315,7 @@ for q in range(dfMg.shape[0]):
     tdf_Fea = tdf_Fea.reset_index(drop=True)
     y_Fea = tdf_Fea['Count']
     x_Fea = list(range(0,len(tdf_Fea.index)))
-    area_Fea = trapz(y_Fea,x_Fea)   
+    area_Fea = (trapz(y_Fea,x_Fea))*1.1   
     lstFea_peakArea.append(area_Fea)
 
     tdf_Ni = pd.Series(dfNi.iloc[q,:])
@@ -339,12 +343,12 @@ for q in range(dfMg.shape[0]):
     lstMg_areaBackground.append(Mg_areaBackground)
     
     if Mg_areaBackground > area_Mg:
-        Mg_areaCorr = area_Mg
+        Mg_areaCorr = area_Mg * 0.5
     else:
-        Mg_areaCorr = area_Mg - Mg_areaBackground
-    
-    lstMg_peakAreaCorr.append(Mg_areaCorr)
+        Mg_areaCorr = area_Mg 
 
+    lstMg_peakAreaCorr.append(Mg_areaCorr)
+    
     
     #Aluminum
     y1_Al = df_analysis.iloc[q,1]
@@ -354,16 +358,16 @@ for q in range(dfMg.shape[0]):
     
     y_values = []    
     for x in x_values:
-        y_temp = m_Al*x + y1_Al
+        y_temp = m_Al*x + y1_Al 
         y_values.append(y_temp)
     
     Al_areaBackground = trapz(y_values, x_values)
     lstAl_areaBackground.append(Al_areaBackground)
     
     if Al_areaBackground > area_Al:
-        Al_areaCorr = area_Al
+        Al_areaCorr = area_Al * 0.5
     else:
-        Al_areaCorr = area_Al - Al_areaBackground
+        Al_areaCorr = area_Al
     
     lstAl_peakAreaCorr.append(Al_areaCorr)
     
@@ -383,7 +387,7 @@ for q in range(dfMg.shape[0]):
     lstSi_areaBackground.append(Si_areaBackground)
     
     if Si_areaBackground > area_Si:
-        Si_areaCorr = area_Si
+        Si_areaCorr = area_Si * 0.5
     else:
         Si_areaCorr = area_Si - Si_areaBackground
     
@@ -405,7 +409,7 @@ for q in range(dfMg.shape[0]):
     lstP_areaBackground.append(P_areaBackground)
     
     if P_areaBackground > area_P:
-        P_areaCorr = area_P
+        P_areaCorr = area_P * 0.5
     else:
         P_areaCorr = area_P - P_areaBackground
     
@@ -427,7 +431,7 @@ for q in range(dfMg.shape[0]):
     lstS_areaBackground.append(S_areaBackground)
     
     if S_areaBackground > area_S:
-        S_areaCorr = area_S
+        S_areaCorr = area_S * 0.5
     else:
         S_areaCorr = area_S - S_areaBackground
     
@@ -448,7 +452,7 @@ for q in range(dfMg.shape[0]):
     lstRh_areaBackground.append(Rh_areaBackground)
     
     if Rh_areaBackground > area_Rh:
-        Rh_areaCorr = area_Rh
+        Rh_areaCorr = area_Rh * 0.5
     else:
         Rh_areaCorr = area_Rh - Rh_areaBackground
     
@@ -469,7 +473,7 @@ for q in range(dfMg.shape[0]):
     lstK_areaBackground.append(K_areaBackground)
     
     if K_areaBackground > area_K:
-        K_areaCorr = area_K
+        K_areaCorr = area_K * 0.5
     else:
         K_areaCorr = area_K - K_areaBackground
     
@@ -490,7 +494,7 @@ for q in range(dfMg.shape[0]):
     lstCaa_areaBackground.append(Caa_areaBackground)
     
     if Caa_areaBackground > area_Caa:
-        Caa_areaCorr = area_Caa
+        Caa_areaCorr = area_Caa * 0.5
     else:
         Caa_areaCorr = area_Caa - Caa_areaBackground
     
@@ -511,7 +515,7 @@ for q in range(dfMg.shape[0]):
     lstTia_areaBackground.append(Tia_areaBackground)
     
     if Tia_areaBackground > area_Tia:
-        Tia_areaCorr = area_Tia
+        Tia_areaCorr = area_Tia * 0.5
     else:
         Tia_areaCorr = area_Tia - Tia_areaBackground
     
@@ -532,7 +536,7 @@ for q in range(dfMg.shape[0]):
     lstCr_areaBackground.append(Cr_areaBackground)
     
     if Cr_areaBackground > area_Cr:
-        Cr_areaCorr = area_Cr
+        Cr_areaCorr = area_Cr * 0.5
     else:
         Cr_areaCorr = area_Cr - Cr_areaBackground
     
@@ -553,7 +557,7 @@ for q in range(dfMg.shape[0]):
     lstMn_areaBackground.append(Mn_areaBackground)
     
     if Mn_areaBackground > area_Mn:
-        Mn_areaCorr = area_Mn
+        Mn_areaCorr = area_Mn * 0.5
     else:
         Mn_areaCorr = area_Mn - Mn_areaBackground
     
@@ -574,9 +578,9 @@ for q in range(dfMg.shape[0]):
     lstFea_areaBackground.append(Fea_areaBackground)
     
     if Fea_areaBackground > area_Fea:
-        Fea_areaCorr = area_Fea
+        Fea_areaCorr = area_Fea * 0.5
     else:
-        Fea_areaCorr = area_Fea - Fea_areaBackground
+        Fea_areaCorr = area_Fea
         
     lstFea_peakAreaCorr.append(Fea_areaCorr)
 
@@ -595,26 +599,26 @@ for q in range(dfMg.shape[0]):
     lstNi_areaBackground.append(Ni_areaBackground)
     
     if Ni_areaBackground > area_Ni:
-        Ni_areaCorr = area_Ni
+        Ni_areaCorr = area_Ni * 0.5
     else:
         Ni_areaCorr = area_Ni - Ni_areaBackground
         
     lstNi_peakAreaCorr.append(Ni_areaCorr)
-    
-dict = {'Mg Peak Area':lstMg_peakArea, 'Mg Background Area':lstMg_areaBackground, 'Mg Peak Area Corrected':lstMg_peakAreaCorr,
-       'Al Peak Area':lstAl_peakArea, 'Al Background Area':lstAl_areaBackground, 'Al Peak Area Corrected':lstAl_peakAreaCorr,
-       'Si Peak Area':lstSi_peakArea, 'Si Background Area':lstSi_areaBackground, 'Si Peak Area Corrected':lstSi_peakAreaCorr,
-       'P Peak Area':lstP_peakArea, 'P Background Area':lstP_areaBackground, 'P Peak Area Corrected':lstP_peakAreaCorr,
-       'S Peak Area':lstS_peakArea, 'S Background Area':lstS_areaBackground, 'S Peak Area Corrected':lstS_peakAreaCorr,
-       'Rh Peak Area:':lstRh_peakArea, 'Rh Background Area':lstRh_areaBackground, 'Rh Peak Area Corrected':lstRh_peakAreaCorr,
-        'K Peak Area':lstK_peakArea, 'K Background Area':lstK_areaBackground, 'K Peak Area Corrected':lstK_peakAreaCorr,
-        'Ca(a) Peak Area':lstCaa_peakArea, 'Ca(a) Background Area':lstCaa_areaBackground, 'Ca(a) Peak Area Corrected':lstCaa_peakAreaCorr,
-        'Ti(a) Peak Area':lstTia_peakArea, 'Ti(a) Background Area':lstTia_areaBackground, 'Ti(a) Peak Area Corrected':lstTia_peakAreaCorr,
-        'Cr Peak Area':lstCr_peakArea, 'Cr Background Area':lstCr_areaBackground, 'Cr Peak Area Corrected':lstCr_peakAreaCorr,
-        'Mn Peak Area':lstMn_peakArea, 'Mn Background Area':lstMn_areaBackground, 'Mn Peak Area Corrected':lstMn_peakAreaCorr,
-       'Fe(a) Peak Area':lstFea_peakArea, 'Fe(a) Background Area':lstFea_areaBackground, 'Fe(a) Peak Area Corrected':lstFea_peakAreaCorr,
-       'Ni Peak Area':lstNi_peakArea, 'Ni Background Area':lstNi_areaBackground, 'Ni Peak Area Corrected':lstNi_peakAreaCorr}
+
+dict = {'PMC':lst_PMC, 
+       'Mg peak area M1':lstMg_peakAreaCorr,
+       'Al peak area M1':lstAl_peakAreaCorr,
+       'Si peak area M1':lstSi_peakAreaCorr,    
+       'P peak area M1':lstP_peakAreaCorr,      
+       'S peak area M1':lstS_peakAreaCorr,     
+       'Rh peak area M1':lstRh_peakAreaCorr,      
+       'K peak area Corr M1':lstK_peakAreaCorr,
+       'Ca(a) peak area M1':lstCaa_peakAreaCorr,
+       'Ti(a) peak area M1':lstTia_peakAreaCorr,       
+       'Cr peak area M1':lstCr_peakAreaCorr,       
+       'Mn peak area M1':lstMn_peakAreaCorr,      
+       'Fe(a) peak area M1':lstFea_peakAreaCorr,       
+       'Ni peak area M1':lstNi_peakAreaCorr}
 
 df_final = pd.DataFrame(dict)
-
 df_final.to_csv(output_file)
