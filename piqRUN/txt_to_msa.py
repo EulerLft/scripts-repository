@@ -8,14 +8,17 @@ Created on Sun Oct 15 18:02:14 2023
 import os
 import pandas as pd 
 
-standards = pd.read_csv('SCLK.csv', header=0)
-standards = standards.iloc[:,1:]
+inpt = input('please input the SCLK file name: ')
+
+standards = pd.read_csv(inpt, header=0)
+#standards = standards.iloc[:,1:]
 
 realtime_A = []
 realtime_B = []
 livetime_A = []
 livetime_B = []
 yp_temp = []
+
 
 for i in list(range(0, len(standards))):
     
@@ -34,6 +37,7 @@ for i in list(range(0, len(standards))):
     yp_temp.append(y_p_temp)
 
 lst = []
+
 
 for i in list(range(0, len(realtime_A))):
     
@@ -57,15 +61,25 @@ for i in list(range(0, len(realtime_A))):
              "#SPECTRUM    : start of spectrum data"]    
     lst.append(lines)
     
- 
 # Get a list of all text files in the current directory
 txt_files = [file for file in os.listdir() if file.endswith('.txt')]
 
-i = -1
-for txt_file in txt_files:
-    
-    i += 1
-    
+# Define a function to extract the shot number from the file name
+def extract_shot_number(filename):
+    try:
+        # Split the filename using underscores and extract the part containing the shot number
+        shot_part = filename.split('_shot_')[1]
+        # Remove the ".txt" extension and return the shot number as an integer
+        return int(shot_part.split('.txt')[0])
+    except (IndexError, ValueError):
+        # Handle cases where the filename doesn't match the expected pattern
+        return float('inf')  # Use infinity as a placeholder for sorting
+
+# Sort the txt_files list based on the shot numbers
+txt_files.sort(key=extract_shot_number)
+
+
+for i, txt_file in enumerate(txt_files):
     # Read the content of the existing text file
     with open(txt_file, 'r') as txt_file_obj:
         existing_content = txt_file_obj.read()
@@ -74,7 +88,9 @@ for txt_file in txt_files:
     with open(txt_file, 'w') as txt_file_obj:
         txt_file_obj.write("\n".join(lst[i]) + "\n" + existing_content)
 
-[os.rename(f, f.replace('.txt', '.msa')) for f in os.listdir() if f.endswith('.txt')]
-[open(file, 'a').write('#ENDOFDATA     end of spectrum data') for file in os.listdir() if file.endswith('.msa')]
 
+[os.rename(f, f.replace('.txt', '.msa')) for f in os.listdir() if f.endswith('.txt')]
+[open(file, 'a').write('#ENDOFDATA     end of spectrum data\n') for file in os.listdir() if file.endswith('.msa')]
+
+print('\n')
 print(".msa files created")

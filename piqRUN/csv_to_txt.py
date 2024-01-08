@@ -9,12 +9,11 @@ import pandas as pd
 import os
 
 inpt = input('please input the file name abbrev.: ')
+df1 = input('please input detector A file name: ')
+df2 = input('please input detector B file name: ')
 
-detA = pd.read_csv('detA.csv', header=0)
-detB = pd.read_csv('detB.csv', header=0)
-
-detA = detA.iloc[:, 1:]
-detB = detB.iloc[:, 1:]
+detA = pd.read_csv(df1, header=0)
+detB = pd.read_csv(df2, header=0)
 
 # Make sure that the DataFrames have the same number of rows
 if len(detA) != len(detB):
