@@ -5,7 +5,6 @@ Created on Wed Oct 18 08:01:10 2023
 @author: salva
 """
 
-import matplotlib.pyplot as plt 
 import pandas as pd 
 from numpy import trapz
 
@@ -23,12 +22,12 @@ df_PMC = pd.read_csv(input_PMC_file)
 lst_PMC = df_PMC['PMC'].tolist()
 
 # peak ranges 
-peakRanges = [152,172,174,202,205,244,247,272,278,314,319,397,402,
-               440,442,493,546,601,665,716,725,774,781,851,926,979]
+peakRanges = [152,172,174,202,205,244,247,272,278,314,319,397,402,440,442,
+              493,546,601,665,716,725,774,781,851,926,979,1114,1241,1305,1527]
 
 
 # Create DataFrames, channel lists and max list
-element_names = ["Mg", "Al", "Si", "P", "S", "Rh", "K", "Ca", "Ti", "Cr", "Mn", "Fe", "Ni"]
+element_names = ["Mg", "Al", "Si", "P", "S", "Rh", "K", "Ca", "Ti", "Cr", "Mn", "Fe", "Ni", "back1", "back2"]
 dfs = {}
 max_dfs = {}
 channels = {}
@@ -92,6 +91,8 @@ dfCr = dfs["dfCr"]
 dfMn = dfs["dfMn"]
 dfFea = dfs["dfFe"]
 dfNi = dfs["dfNi"]
+dfback1 = dfs["dfback1"]
+dfback2 = dfs["dfback2"]
 
 dfNaMg = dfs_back['NaMg']
 dfMgAl = dfs_back['MgAl']
@@ -133,7 +134,9 @@ data = {
     'Max Cr Channel': max_dfs['max_Cr'],
     'Max Mn Channel': max_dfs['max_Mn'],
     'Max Fe(a) Channel': max_dfs['max_Fe'],
-    'Max Ni Channel': max_dfs['max_Ni']
+    'Max Ni Channel': max_dfs['max_Ni'],
+    'Max back1 Channel': max_dfs['max_back1'],
+    'Max back2 Channel': max_dfs['max_back2']
 }
 
 df1 = pd.DataFrame(data)
@@ -190,6 +193,8 @@ lstFea_peakArea = []
 lstFea_peakAreaCorr = []
 lstNi_peakArea = []
 lstNi_peakAreaCorr = []
+lstback1_peakArea = []
+lstback2_peakArea = []
 
 # Background
 
@@ -326,6 +331,24 @@ for q in range(dfMg.shape[0]):
     x_Ni = list(range(0,len(tdf_Ni.index)))
     area_Ni = trapz(y_Ni,x_Ni)   
     lstNi_peakArea.append(area_Ni)
+    
+    tdf_back1 = pd.Series(dfback1.iloc[q,:])
+    tdf_back1 = tdf_back1.to_frame()
+    tdf_back1.columns = ['Count']
+    tdf_back1 = tdf_back1.reset_index(drop=True)
+    y_back1 = tdf_back1['Count']
+    x_back1 = list(range(0,len(tdf_back1.index)))
+    area_back1 = trapz(y_back1,x_back1)   
+    lstback1_peakArea.append(area_back1)
+    
+    tdf_back2 = pd.Series(dfback2.iloc[q,:])
+    tdf_back2 = tdf_back2.to_frame()
+    tdf_back2.columns = ['Count']
+    tdf_back2 = tdf_back2.reset_index(drop=True)
+    y_back2 = tdf_back2['Count']
+    x_back2 = list(range(0,len(tdf_back2.index)))
+    area_back2 = trapz(y_back2,x_back2)   
+    lstback2_peakArea.append(area_back2)
 
     # Background 
     
@@ -345,7 +368,7 @@ for q in range(dfMg.shape[0]):
     if Mg_areaBackground > area_Mg:
         Mg_areaCorr = area_Mg * 0.5
     else:
-        Mg_areaCorr = area_Mg 
+        Mg_areaCorr = area_Mg - Mg_areaBackground
 
     lstMg_peakAreaCorr.append(Mg_areaCorr)
     
@@ -367,7 +390,7 @@ for q in range(dfMg.shape[0]):
     if Al_areaBackground > area_Al:
         Al_areaCorr = area_Al * 0.5
     else:
-        Al_areaCorr = area_Al
+        Al_areaCorr = area_Al - Mg_areaBackground
     
     lstAl_peakAreaCorr.append(Al_areaCorr)
     
@@ -578,9 +601,9 @@ for q in range(dfMg.shape[0]):
     lstFea_areaBackground.append(Fea_areaBackground)
     
     if Fea_areaBackground > area_Fea:
-        Fea_areaCorr = area_Fea * 0.5
+        Fea_areaCorr = area_Fea * 0.5   
     else:
-        Fea_areaCorr = area_Fea
+        Fea_areaCorr = area_Fea - Fea_areaBackground
         
     lstFea_peakAreaCorr.append(Fea_areaCorr)
 
@@ -606,19 +629,62 @@ for q in range(dfMg.shape[0]):
     lstNi_peakAreaCorr.append(Ni_areaCorr)
 
 dict = {'PMC':lst_PMC, 
-       'Mg peak area M1':lstMg_peakAreaCorr,
-       'Al peak area M1':lstAl_peakAreaCorr,
-       'Si peak area M1':lstSi_peakAreaCorr,    
-       'P peak area M1':lstP_peakAreaCorr,      
-       'S peak area M1':lstS_peakAreaCorr,     
-       'Rh peak area M1':lstRh_peakAreaCorr,      
-       'K peak area M1':lstK_peakAreaCorr,
-       'Ca peak area M1':lstCaa_peakAreaCorr,
-       'Ti peak area M1':lstTia_peakAreaCorr,       
-       'Cr peak area M1':lstCr_peakAreaCorr,       
-       'Mn peak area M1':lstMn_peakAreaCorr,      
-       'Fe peak area M1':lstFea_peakAreaCorr,       
-       'Ni peak area M1':lstNi_peakAreaCorr}
+       'Mg peak area':lstMg_peakArea,
+       'Mg bckg area':lstMg_areaBackground,
+       'Mg peak area Corr':lstMg_peakAreaCorr,
+       
+       'Al peak area':lstAl_peakArea,
+       'Al bckg area':lstAl_areaBackground,
+       'Al peak area Corr':lstAl_peakAreaCorr,      
+       
+       'Si peak area':lstSi_peakArea,    
+       'Si bckg area':lstSi_areaBackground,
+       'Si peak area Corr':lstSi_peakAreaCorr,
+       
+       'P peak area':lstP_peakArea,      
+       'P bckg area':lstP_areaBackground,
+       'P peak area Corr':lstP_peakAreaCorr,
+       
+       'S peak area':lstS_peakArea,     
+       'S bckg area':lstS_areaBackground,
+       'S peak area Corr':lstS_peakAreaCorr, 
+       
+       'Rh peak area':lstRh_peakArea,      
+       'Rh bckg area':lstRh_areaBackground,
+       'Rh peak area Corr':lstRh_peakAreaCorr,
+       
+       'K peak area':lstK_peakArea,
+       'K bckg area':lstK_areaBackground,
+       'K peak area Corr':lstK_peakAreaCorr, 
+       
+       'Ca peak area':lstCaa_peakArea,
+       'Ca bckg area':lstCaa_areaBackground,
+       'Ca peak area Corr':lstCaa_peakAreaCorr,
+       
+       'Ti peak area':lstTia_peakArea,       
+       'Ti bckg area':lstTia_areaBackground,
+       'Ti peak area Corr':lstTia_peakAreaCorr,  
+       
+       'Cr peak area':lstCr_peakArea,       
+       'Cr bckg area':lstCr_areaBackground,
+       'Cr peak area Corr':lstCr_peakAreaCorr, 
+       
+       'Mn peak area':lstMn_peakArea,      
+       'Mn bckg area':lstMn_areaBackground,
+       'Mn peak area Corr':lstMn_peakAreaCorr,  
+       
+       'Fe peak area':lstFea_peakArea,       
+       'Fe bckg area':lstFea_areaBackground,
+       'Fe peak area Corr':lstFea_peakAreaCorr, 
+       
+       'Ni peak area':lstNi_peakArea,
+       'Ni bckg area':lstNi_areaBackground,
+       'Ni peak area Corr':lstNi_peakAreaCorr,
+       
+       'back1 peak area':lstback1_peakArea,
+       'back2 peak area':lstback2_peakArea
+       }
+
 
 df_final = pd.DataFrame(dict)
 df_final.to_csv(output_file)

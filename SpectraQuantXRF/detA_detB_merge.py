@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Nov 18 19:18:49 2023
+Created on Thu Jan 11 08:59:13 2024
 
 @author: salva
 """
 
 import pandas as pd 
 
-inpt_1 = input('please input detA data: ')
-inpt_2 = input('please input detB data: ')
-inpt_3 = input('please input desired output file name: ')
+inpt1 = input('please input DetA file: ')
+inpt2 = input('please input DetB file: ')
+inpt3 = input('Please input outputfile name: ')
 
-df_detA = pd.read_csv(inpt_1)
-df_detB = pd.read_csv(inpt_2)
+df_A = pd.read_csv(inpt1)
+df_B = pd.read_csv(inpt2)
 
-df = df_detA + df_detB
-df.to_csv(inpt_3)
+df = pd.DataFrame((df_A.values + df_B.values)/2, columns = df_A.columns)
+df['PMC'] = df['PMC'].astype(int)
+
+df.to_csv(inpt3)
+
