@@ -390,7 +390,7 @@ for q in range(dfMg.shape[0]):
     if Al_areaBackground > area_Al:
         Al_areaCorr = area_Al * 0.5
     else:
-        Al_areaCorr = area_Al - Mg_areaBackground
+        Al_areaCorr = area_Al - Al_areaBackground
     
     lstAl_peakAreaCorr.append(Al_areaCorr)
     
