@@ -1,47 +1,41 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct 15 11:45:29 2023
+Created on Thu Oct 19 20:02:47 2023
 
 @author: salva
 """
 
+import os
 import pandas as pd
-import numpy as np
-
 
 # Chunks : Yield successive n-sized chunks from lst
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
-        
-### 1.
+
+csv_file = input('Please input the "rfs" file name as a string: ')
+
 ### Loop the data lines
-with open(input('please enter RFS file name as a string: '), 'r') as temp_f:
+with open(csv_file, 'r') as temp_f:
     # get number of columns in each line
     col_count = [ len(l.split(",")) for l in temp_f.readlines() ]
 
 ### Generate column names  (names will be 0, 1, 2, ..., maximum columns - 1)
 column_names = [i for i in range(0, max(col_count))]
 
-inpt1 = input('Please input the rfs file you want to analyze: ')
-
 ### Read csv
-df = pd.read_csv(inpt1, header=None, delimiter=",", names=column_names);
+df = pd.read_csv(csv_file, header=None, delimiter=",", names=column_names);
 
+file_name_prefix = os.path.splitext(os.path.basename(csv_file))[0][:8]
 
-### 2.
 ### Assign the first row as headers and reset index
 df.columns = df.iloc[0]
 df = df[1:]
 df.reset_index(drop=True, inplace=True)
 
-
-
-### 3.  
 ### Obtain the index of the 'x' label of the PCM spreadsheet
-x = int(df[df['SCLK_B']=='x'].index.values)
-x
+x = df[df['SCLK_B'] == 'x'].index[0]
 
 # SCLK 
 df_SCLK = df.loc[0:x-1]
@@ -74,19 +68,18 @@ df_DetB.reset_index(drop=True, inplace=True)
 #df_DetB.drop(index=df_DetB.index[-1], axis=0, inplace=True)
 
 # Save as .csv
-df_SCLK.to_csv('SCLK.csv')
-df_PCM.to_csv('PMC.csv')
-df_DetA.to_csv('DetA.csv')
-df_DetB.to_csv('DetB.csv')
-
+df_SCLK.to_csv(f'{file_name_prefix}_SCLK.csv', index=False)
+df_PCM.to_csv(f'{file_name_prefix}_PMC.csv', index=False)
+df_DetA.to_csv(f'{file_name_prefix}_DetA.csv', index=False)
+df_DetB.to_csv(f'{file_name_prefix}_DetB.csv', index=False)
 
 # 1.)
 
 ## [NOTE: not sure why importing DetA from the .csv matters. My guess is that I need the additional headers for things
 # to work out. Otherwise obtain NaN entries and mismatched lengths.] 
 
-df_DetA_2 = pd.read_csv('DetA.csv')
-df_livetime_A = pd.read_csv('SCLK.csv')
+df_DetA_2 = pd.read_csv(f'{file_name_prefix}_DetA.csv')
+df_livetime_A = pd.read_csv(f'{file_name_prefix}_SCLK.csv')
 df_livetime_A = df_livetime_A['live_time_A']
 df_livetime_A = df_livetime_A.to_frame()
 
@@ -103,9 +96,9 @@ livetime_A = livetime_A.reset_index(drop=True)
 
 # 1.) b
 
-df_DetB_2 = pd.read_csv('DetB.csv')
+df_DetB_2 = pd.read_csv(f'{file_name_prefix}_DetB.csv')
 df_DetB_2 = df_DetB_2.iloc[:,1:]
-df_livetime_B = pd.read_csv('SCLK.csv')
+df_livetime_B = pd.read_csv(f'{file_name_prefix}_SCLK.csv')
 df_livetime_B = df_livetime_B['live_time_B']
 df_livetime_B = df_livetime_B.to_frame()
 
@@ -124,7 +117,6 @@ livetime_B = livetime_B.reset_index(drop=True)
 livetime_B = livetime_B.iloc[:,1:]
 #livetime_B = livetime_B[:-1]
 
-
 lst = []
 for i in list(range(0,len(df_livetime_B))):
     temp_Val = df_livetime_B.iloc[i,0]
@@ -140,7 +132,7 @@ for i in list(range(0, len(lst))):
     lstDetA.append(lstTemp)
     
 df_DetA2 = pd.DataFrame(lstDetA)
-df_DetA2.to_csv('DetA_cps.csv')
+df_DetA2.to_csv(f'{file_name_prefix}_DetA_cps.csv')
 
 lstDetB = []
 
@@ -152,5 +144,4 @@ for i in list(range(0, len(lst))):
     lstDetB.append(lstTemp)
     
 df_DetB2 = pd.DataFrame(lstDetB)
-df_DetB2.to_csv('DetB_cps.csv')
-
+df_DetB2.to_csv(f'{file_name_prefix}_DetB_cps.csv')
