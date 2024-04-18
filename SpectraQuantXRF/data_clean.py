@@ -24,8 +24,10 @@ with open(input('please enter RFS file name as a string: '), 'r') as temp_f:
 ### Generate column names  (names will be 0, 1, 2, ..., maximum columns - 1)
 column_names = [i for i in range(0, max(col_count))]
 
+inpt1 = input('Please input the rfs file you want to analyze: ')
+
 ### Read csv
-df = pd.read_csv("ps__0240_0688241128_000rfs__00724400836244520072___j02.csv", header=None, delimiter=",", names=column_names);
+df = pd.read_csv(inpt1, header=None, delimiter=",", names=column_names);
 
 
 ### 2.
